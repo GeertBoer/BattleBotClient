@@ -17,8 +17,6 @@ namespace BattleBotClient
         private StreamWriter writer;
         private StreamReader reader;
 
-        Thread receiveThread;
-
 
         public delegate void GameStartedHandler(object sender, EventArgs e);
         public event GameStartedHandler GameStarted;
@@ -52,27 +50,32 @@ namespace BattleBotClient
 
         public Client(int yourPCNr, string serverIP, int serverPort)
         {
+            
             if (yourPCNr >= 0 && yourPCNr <= 10 && serverIP != "" && serverIP != null)
             {
+                
                 MyPCName = "pc" + yourPCNr;
-
+                
                 client = new TcpClient();
-                client.Connect(serverIP, serverPort);
+                client.Connect(serverIP, serverPort);  
+                
                 writer = new StreamWriter(client.GetStream());
                 reader = new StreamReader(client.GetStream());
-
-                receiveThread = new Thread(handleIncomingMessage);
+                
+                Thread receiveThread = new Thread(handleIncomingMessage);
                 receiveThread.Start();
-
-                sendMessage("connect");
+                
+                sendMessage("connect");  
             }
             else throw new Exception("vul de juiste waardes in!");
+            
         }
 
         private void sendMessage(string message)
         {
             bool okMessage = true;
-
+            //* CHECK OVERBODIG
+            /*
             foreach (char c in message)
             {
                 if (c == '#' || c == '&' || c == '%') ;
@@ -80,7 +83,7 @@ namespace BattleBotClient
                     okMessage = false;
                 }
             }
-
+            */
             if (message != null && message != "" && okMessage == true)
             {
                 string toSend = ("#" + MyPCName + "&" + message + "%");
@@ -165,16 +168,6 @@ namespace BattleBotClient
         public void GotHit()
         {
             sendMessage("hit???");
-        }
-
-        public void ManualConnect()
-        {
-            sendMessage("connect");
-        }
-
-        public void Disconnect()
-        {
-            receiveThread.Abort();
         }
     }
 }
