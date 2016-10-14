@@ -48,6 +48,16 @@ namespace BattleBotClient
             }
         }
 
+        public delegate void PenaltyHandler(object sender, EventArgs e);
+        public event PenaltyHandler Penalty;
+        protected virtual void OnPenalty(EventArgs e)
+        {
+            if (Penalty != null)
+            {
+                Penalty(this, e);
+            }
+        }
+
         public Client(int yourPCNr, string serverIP, int serverPort)
         {
             
@@ -153,6 +163,11 @@ namespace BattleBotClient
                             {
                                 incomingMessage = "";
                                 OnGamePaused(EventArgs.Empty);
+                            }
+                            else if (incomingMessage == "penalty")
+                            {
+                                incomingMessage = "";
+                                OnPenalty(EventArgs.Empty);
                             }
                         }
                     }
