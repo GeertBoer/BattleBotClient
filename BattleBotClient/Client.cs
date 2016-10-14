@@ -50,7 +50,7 @@ namespace BattleBotClient
 
         public Client(int yourPCNr, string serverIP, int serverPort)
         {
-            if (yourPCNr >= 0 && yourPCNr <= 4 && serverIP != "" && serverIP != null)
+            if (yourPCNr >= 0 && yourPCNr <= 10 && serverIP != "" && serverIP != null)
             {
                 MyPCName = "pc" + yourPCNr;
 
