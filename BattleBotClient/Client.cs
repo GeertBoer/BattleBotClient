@@ -17,6 +17,8 @@ namespace BattleBotClient
         private StreamWriter writer;
         private StreamReader reader;
 
+        Thread receiveThread;
+
 
         public delegate void GameStartedHandler(object sender, EventArgs e);
         public event GameStartedHandler GameStarted;
@@ -59,7 +61,7 @@ namespace BattleBotClient
                 writer = new StreamWriter(client.GetStream());
                 reader = new StreamReader(client.GetStream());
 
-                Thread receiveThread = new Thread(handleIncomingMessage);
+                receiveThread = new Thread(handleIncomingMessage);
                 receiveThread.Start();
 
                 sendMessage("connect");
@@ -163,6 +165,16 @@ namespace BattleBotClient
         public void GotHit()
         {
             sendMessage("hit???");
+        }
+
+        public void ManualConnect()
+        {
+            sendMessage("connect");
+        }
+
+        public void Disconnect()
+        {
+            receiveThread.Abort();
         }
     }
 }
